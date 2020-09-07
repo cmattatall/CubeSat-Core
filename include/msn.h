@@ -11,6 +11,10 @@
 #include <string>
 #include <unistd.h>
 #include <vector>
+#include <string>
+#include <map>
+
+using namespace std;
 
 //Methods
 map<string, string> deSerialize(std::string message, int mapSize);

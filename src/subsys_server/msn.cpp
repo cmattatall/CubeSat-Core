@@ -8,7 +8,7 @@
 
 //#include "ipc/client_api.h"
 //#include "util/serialize.h"
-#include "include/msn.h"
+#include "msn.h"
 
 using namespace std;
 
