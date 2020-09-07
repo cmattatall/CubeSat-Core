@@ -14,7 +14,7 @@
 #include <string>
 #include <map>
 
-using namespace std;
+using namespace std; 
 
 //Methods
 map<string, string> deSerialize(std::string message, int mapSize);
