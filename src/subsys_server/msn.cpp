@@ -8,7 +8,18 @@
 
 //#include "ipc/client_api.h"
 //#include "util/serialize.h"
-#include "msn.h"
+//#include "msn.h"
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <iterator>
+#include <string>
+#include <unistd.h>
+#include <vector>
+#include <string>
+#include <map>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -25,6 +36,7 @@ int is_current_min(char* msnTime);
   char time[];
 };*/
 
+//Initialize structure to store the mission command and time to execute
 struct mission {
   string cmd;
   string time;
@@ -32,12 +44,14 @@ struct mission {
 
 map<string, string> deSerialize(std::string message, int mapSize)
 {
+
   //create placeholders for map to be returned and vector
   map<string, string> themap;
   std::vector<string> word_list;
   //initialize the size of the word list and counter
   int theSize = 2 * mapSize;
   int j = 0;
+
   //loop through each word in the string list
   for(int x = 0; x < theSize; x++)
   {
@@ -71,7 +85,6 @@ map<string, string> deSerialize(std::string message, int mapSize)
     string toadd2 = *(iter+1);
     themap.insert(pair<string, string>(toadd1, toadd2));
   }
-  //return themap
   return themap;
 }
 
@@ -116,7 +129,7 @@ int main() {
     return -1;
   }*/
 
-  msg = "cmd::takePicture::time::Wed Sep 10 06:25:42 2020";
+  msg = "cmd::takePicture::time::Wed Sep 10 06:25:42 2020::";
   //Turn the incoming message into map<string, string> format
   msn = deSerialize(msg, 2);
   //iterate through the map to parse out time and commands and store into mission struct
@@ -125,11 +138,9 @@ int main() {
     if (iter->first == "cmd") {
       string value = iter->second;
       current_msn.cmd = value;
-      //strcpy(current_msn.cmd, iter->second);
     } else if (iter->first == "time") {
       string value = iter->second;
       current_msn.time = value;
-      //strcpy(current_msn.time, iter->second);
     }
     cout << iter->first << " , " << iter->second << endl;
   }
@@ -144,12 +155,14 @@ int main() {
   //if not, then store mission into msnqueue.txt
   } else {
     // Add incoming message to msnqueue.txt
-    //static const char filename[] = "msnqueue.txt";
-    //ofstream outfile;
-    //outfile.open("msnqueue.txt", ofstream::out | ofstream::app);
-    //string new_msn = current_msn.cmd + "::" + current_msn.time + "\n";
-    //outfile << new_msn << endl;
-    //outfile.close();
+    cout << "It is not time for the mission\n";
+    static const char filename[] = "msnqueue.txt";
+    ofstream outfile;
+    outfile.open("msnqueue.txt", ofstream::out | ofstream::app);
+    string new_msn = current_msn.cmd + "::" + current_msn.time + "\n";
+    outfile << new_msn << endl;
+    outfile.close();
+    cout << "The mission has been added to the queue";
     //fprintf(file, "%s", new_msn);
     //fwrite(new_msn.c_str(), new_msn.size(), sizeof(char), file);
   }
